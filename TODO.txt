@@ -1,0 +1,2 @@
+- init git repo and push to remote
+- establish basic CI with `go fmt`

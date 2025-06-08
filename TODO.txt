@@ -1,1 +1,2 @@
 - establish basic CI with `go fmt`
+- add support for Unicode

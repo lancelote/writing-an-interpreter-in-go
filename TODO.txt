@@ -1,2 +1,4 @@
 - establish basic CI with `go fmt`
 - add support for Unicode
+- add support for floats
+- add support for hex and octal

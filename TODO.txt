@@ -1,4 +1,5 @@
-- establish basic CI with `go fmt`
+- establish basic CI with `go fmt` and `go test`
 - add support for Unicode
 - add support for floats
 - add support for hex and octal
+- abstract reading two-chars tokens

@@ -5,7 +5,7 @@ My notes while reading "[Writing An Interpreter In Go][book]" book by Thorsten B
 ## TOC
 
 - [x] Introduction
-- [ ] Chapter 1: Lexing
+- [x] Chapter 1: Lexing
 - [ ] Chapter 2: Parsing
 - [ ] Chapter 3: Evaluation
 - [ ] Chapter 4: Extending the Interpreter

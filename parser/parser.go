@@ -60,7 +60,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	stmt.Name = &ast.Identifier{
 		Token: p.curToken,
-		Value: p.curToken.Literal
+		Value: p.curToken.Literal,
 	}
 
 	if !p.expectPeek(token.ASSIGN) {

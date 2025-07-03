@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/lancelote/writing-an-interpreter-in-go/ast"
 	"github.com/lancelote/writing-an-interpreter-in-go/lexer"
 	"github.com/lancelote/writing-an-interpreter-in-go/token"
@@ -10,16 +11,29 @@ type Parser struct {
 	l *lexer.Lexer
 
 	curToken  token.Token
+	errors    []string
 	peekToken token.Token
 }
 
 func New(l *lexer.Lexer) *Parser {
-	p := &Parser{l: l}
+	p := &Parser{
+		l:      l,
+		errors: []string{},
+	}
 
 	p.nextToken()
 	p.nextToken()
 
 	return p
+}
+
+func (p *Parser) Errors() []string {
+	return p.errors
+}
+
+func (p *Parser) peekError(t token.TokenType) {
+	msg := fmt.Sprintf("want token %s, got %s", t, p.peekToken.Type)
+	p.errors = append(p.errors, msg)
 }
 
 func (p *Parser) nextToken() {
@@ -88,6 +102,7 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 		p.nextToken()
 		return true
 	} else {
+		p.peekError(t)
 		return false
 	}
 }

@@ -1,3 +1,4 @@
+- add support for postfix operators
 - establish basic CI with `go fmt` and `go test`
 - add support for Unicode
 - add support for floats

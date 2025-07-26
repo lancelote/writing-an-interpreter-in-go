@@ -23,9 +23,7 @@ let foobar = 838383;
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	if len(program.Statements) != 3 {
-		t.Fatalf("program has %d statements, want 3", len(program.Statements))
-	}
+	assertStatementCount(t, program, 3)
 
 	tests := []struct {
 		expectedIdentifier string
@@ -85,9 +83,7 @@ return 993322;
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	if len(program.Statements) != 3 {
-		t.Fatalf("program has %d statements, want 3", len(program.Statements))
-	}
+	assertStatementCount(t, program, 3)
 
 	for _, stmt := range program.Statements {
 		returnStmt, ok := stmt.(*ast.ReturnStatement)
@@ -123,9 +119,7 @@ func TestIdentifierExpression(t *testing.T) {
 	program := p.ParseProgram()
 	checkParseErrors(t, p)
 
-	if len(program.Statements) != 1 {
-		t.Fatalf("not enough statements, got=%d, want 1", len(program.Statements))
-	}
+	assertStatementCount(t, program, 1)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
@@ -154,9 +148,7 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	program := p.ParseProgram()
 	checkParseErrors(t, p)
 
-	if len(program.Statements) != 1 {
-		t.Fatalf("not enough statements, got=%d, want 1", len(program.Statements))
-	}
+	assertStatementCount(t, program, 1)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
@@ -417,4 +409,12 @@ func testInfixExpression(
 	}
 
 	return true
+}
+
+func assertStatementCount(t *testing.T, program *ast.Program, expected int) {
+	t.Helper()
+
+	if len(program.Statements) != expected {
+		t.Fatalf("got %d statements, want %d", len(program.Statements), expected)
+	}
 }

@@ -41,31 +41,6 @@ let foobar = 838383;
 	}
 }
 
-func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
-	if s.TokenLiteral() != "let" {
-		t.Errorf("s.TokenLiteral() is not 'let', got '%q'", s.TokenLiteral())
-		return false
-	}
-
-	letStmt, ok := s.(*ast.LetStatement)
-	if !ok {
-		t.Errorf("s is not *ast.LetStatement, got '%T'", s)
-		return false
-	}
-
-	if letStmt.Name.Value != name {
-		t.Errorf("letStmt.Name.Value is not '%s', got '%s'", name, letStmt.Name.Value)
-		return false
-	}
-
-	if letStmt.Name.TokenLiteral() != name {
-		t.Errorf("letStmt.Name.TokenLiteral() not '%s', got '%s'", name, letStmt.Name.TokenLiteral())
-		return false
-	}
-
-	return true
-}
-
 func TestReturnStatements(t *testing.T) {
 	input := `
 return 5;
@@ -96,19 +71,6 @@ return 993322;
 			t.Errorf("returnStmt literal is not `return`, got %q", literal)
 		}
 	}
-}
-
-func checkParseErrors(t *testing.T, p *Parser) {
-	errors := p.Errors()
-	if len(errors) == 0 {
-		return
-	}
-
-	t.Errorf("parser has %d errors", len(errors))
-	for _, msg := range errors {
-		t.Errorf("parser error: %q", msg)
-	}
-	t.FailNow()
 }
 
 func TestIdentifierExpression(t *testing.T) {
@@ -405,6 +367,46 @@ func testInfixExpression(
 	}
 
 	if !testLiteralExpression(t, opExp.Right, right) {
+		return false
+	}
+
+	return true
+}
+
+func checkParseErrors(t *testing.T, p *Parser) {
+	t.Helper()
+
+	errors := p.Errors()
+	if len(errors) == 0 {
+		return
+	}
+
+	t.Errorf("parser has %d errors", len(errors))
+	for _, msg := range errors {
+		t.Errorf("parser error: %q", msg)
+	}
+	t.FailNow()
+}
+
+func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
+	if s.TokenLiteral() != "let" {
+		t.Errorf("s.TokenLiteral() is not 'let', got '%q'", s.TokenLiteral())
+		return false
+	}
+
+	letStmt, ok := s.(*ast.LetStatement)
+	if !ok {
+		t.Errorf("s is not *ast.LetStatement, got '%T'", s)
+		return false
+	}
+
+	if letStmt.Name.Value != name {
+		t.Errorf("letStmt.Name.Value is not '%s', got '%s'", name, letStmt.Name.Value)
+		return false
+	}
+
+	if letStmt.Name.TokenLiteral() != name {
+		t.Errorf("letStmt.Name.TokenLiteral() not '%s', got '%s'", name, letStmt.Name.TokenLiteral())
 		return false
 	}
 

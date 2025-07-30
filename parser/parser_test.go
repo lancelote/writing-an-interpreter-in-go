@@ -335,6 +335,22 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 	}
 }
 
+func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{}) bool {
+	switch v := expected.(type) {
+	case int:
+		return testIntegerLiteral(t, exp, int64(v))
+	case int64:
+		return testIntegerLiteral(t, exp, v)
+	case string:
+		return testIdentifier(t, exp, v)
+	case bool:
+		return testBoolean(t, exp, v)
+	}
+
+	t.Errorf("type of expression is not handled, got=%T", exp)
+	return false
+}
+
 func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	integer, ok := il.(*ast.IntegerLiteral)
 	if !ok {
@@ -375,18 +391,24 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	return true
 }
 
-func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{}) bool {
-	switch v := expected.(type) {
-	case int:
-		return testIntegerLiteral(t, exp, int64(v))
-	case int64:
-		return testIntegerLiteral(t, exp, v)
-	case string:
-		return testIdentifier(t, exp, v)
+func testBoolean(t *testing.T, exp ast.Expression, value bool) bool {
+	boolean, ok := exp.(*ast.Boolean)
+	if !ok {
+		t.Errorf("expected boolean, got=%T", exp)
+		return false
 	}
 
-	t.Errorf("type of expression is not handled, got=%T", exp)
-	return false
+	if boolean.Value != value {
+		t.Errorf("boolean value is not %t, got %t", value, boolean.Value)
+		return false
+	}
+
+	if boolean.TokenLiteral() != fmt.Sprintf("%t", value) {
+		t.Errorf("expected boolean token literal %t, got %s", value, boolean.TokenLiteral())
+		return false
+	}
+
+	return true
 }
 
 func testInfixExpression(

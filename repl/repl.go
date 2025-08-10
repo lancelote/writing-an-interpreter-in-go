@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/lancelote/writing-an-interpreter-in-go/lexer"
-	"github.com/lancelote/writing-an-interpreter-in-go/token"
+	"github.com/lancelote/writing-an-interpreter-in-go/parser"
 	"io"
 )
 
@@ -22,9 +22,21 @@ func Start(in io.Reader, out io.Writer) {
 
 		line := scanner.Text()
 		l := lexer.New(line)
+		p := parser.New(l)
+		program := p.ParseProgram()
 
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Fprintf(out, "%+v\n", tok)
+		if len(p.Errors()) != 0 {
+			printParseErrors(out, p.Errors())
+			continue
 		}
+
+		io.WriteString(out, program.String())
+		io.WriteString(out, "\n")
+	}
+}
+
+func printParseErrors(out io.Writer, errors []string) {
+	for _, msg := range errors {
+		io.WriteString(out, "\t"+msg+"\n")
 	}
 }

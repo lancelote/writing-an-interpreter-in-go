@@ -500,6 +500,47 @@ func TestCallExpressionParsing(t *testing.T) {
 	testInfixExpression(t, exp.Arguments[2], 4, "+", 5)
 }
 
+func TestCallExpressionArgumentParsing(t *testing.T) {
+	tests := []struct {
+		input         string
+		expectedIdent string
+		expectedArgs  []string
+	}{
+		{"add();", "add", []string{}},
+		{"add(1);", "add", []string{"1"}},
+		{"add(1, 2 * 3, 4 + 5);", "add", []string{"1", "(2 * 3)", "(4 + 5)"}},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParseErrors(t, p)
+
+		assertStatementCount(t, program.Statements, 1)
+		stmt := assertExpressionStatement(t, program.Statements[0])
+
+		exp, ok := stmt.Expression.(*ast.CallExpression)
+		if !ok {
+			t.Fatalf("want call expression, got %T", stmt.Expression)
+		}
+
+		if !testIdentifier(t, exp.Function, tt.expectedIdent) {
+			return
+		}
+
+		if len(tt.expectedArgs) != len(exp.Arguments) {
+			t.Fatalf("want %d arguments, got %d", len(tt.expectedArgs), len(exp.Arguments))
+		}
+
+		for i, arg := range tt.expectedArgs {
+			if arg != exp.Arguments[i].String() {
+				t.Errorf("want argument %s, got %s", arg, exp.Arguments[i].String())
+			}
+		}
+	}
+}
+
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected any) bool {
 	switch v := expected.(type) {
 	case int:

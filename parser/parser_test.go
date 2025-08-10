@@ -403,6 +403,37 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 	}
 }
 
+func TestFunctionLiteralParsing(t *testing.T) {
+	input := `fn(x, y) { x + y; }`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	assertStatementCount(t, program.Statements, 1)
+
+	stmt := assertExpressionStatement(t, program.Statements[0])
+
+	function, ok := stmt.Expression.(*ast.FunctionLiteral)
+	if !ok {
+		t.Fatalf("want function literal, got %T", stmt.Expression)
+	}
+
+	if len(function.Parameters) != 2 {
+		t.Fatalf("unexpected number of parameters, want 2, got %d", len(function.Parameters))
+	}
+
+	testLiteralExpression(t, function.Parameters[0], "x")
+	testLiteralExpression(t, function.Parameters[1], "y")
+
+	assertStatementCount(t, function.Body.Statements, 1)
+
+	bodyStmt := assertExpressionStatement(t, function.Body.Statements[0])
+
+	testInfixExpression(t, bodyStmt.Expression, "x", "+", "y")
+}
+
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected any) bool {
 	switch v := expected.(type) {
 	case int:

@@ -39,33 +39,30 @@ func TestLetStatements(t *testing.T) {
 }
 
 func TestReturnStatements(t *testing.T) {
-	input := `
-return 5;
-return 10;
-return 993322;
-`
-
-	l := lexer.New(input)
-	p := New(l)
-
-	program := p.ParseProgram()
-	checkParseErrors(t, p)
-
-	if program == nil {
-		t.Fatalf("ParseProgram() returned nil")
+	tests := []struct {
+		input               string
+		expectedReturnValue any
+	}{
+		{"return 5;", 5},
+		{"return true;", true},
+		{"return foobar;", "foobar"},
 	}
 
-	assertStatementCount(t, program.Statements, 3)
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParseErrors(t, p)
 
-	for _, stmt := range program.Statements {
-		returnStmt, ok := stmt.(*ast.ReturnStatement)
+		assertStatementCount(t, program.Statements, 1)
+
+		stmt, ok := program.Statements[0].(*ast.ReturnStatement)
 		if !ok {
-			t.Errorf("stmt is not *ast.ReturnStatement, got %T", stmt)
-			continue
+			t.Errorf("want return statement, got %T", stmt)
 		}
-		literal := returnStmt.TokenLiteral()
-		if literal != "return" {
-			t.Errorf("returnStmt literal is not `return`, got %q", literal)
+
+		if !testLiteralExpression(t, stmt.ReturnValue, tt.expectedReturnValue) {
+			return
 		}
 	}
 }

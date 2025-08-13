@@ -5,6 +5,11 @@ import (
 	"github.com/lancelote/writing-an-interpreter-in-go/object"
 )
 
+var (
+	TRUE  = &object.Boolean{Value: true}
+	FALSE = &object.Boolean{Value: false}
+)
+
 func Eval(node ast.Node) object.Object {
 	switch node := node.(type) {
 
@@ -18,7 +23,7 @@ func Eval(node ast.Node) object.Object {
 		return &object.Integer{Value: node.Value}
 
 	case *ast.Boolean:
-		return &object.Boolean{Value: node.Value}
+		return nativeBoolToBooleanObject(node.Value)
 	}
 
 	return nil
@@ -32,4 +37,11 @@ func evalStatements(stmts []ast.Statement) object.Object {
 	}
 
 	return result
+}
+
+func nativeBoolToBooleanObject(b bool) *object.Boolean {
+	if b {
+		return TRUE
+	}
+	return FALSE
 }

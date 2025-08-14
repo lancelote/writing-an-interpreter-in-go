@@ -61,14 +61,21 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 }
 
 func evalBangOperatorExpression(right object.Object) object.Object {
-	switch right {
-	case TRUE:
-		return FALSE
-	case FALSE:
-		return TRUE
-	case NULL:
-		return TRUE
-	default:
+	if right == TRUE {
 		return FALSE
 	}
+
+	if right == FALSE {
+		return TRUE
+	}
+
+	if right == NULL {
+		return TRUE
+	}
+
+	if i, ok := right.(*object.Integer); ok && i.Value == 0 {
+		return TRUE
+	}
+
+	return FALSE
 }

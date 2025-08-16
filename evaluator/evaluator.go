@@ -68,23 +68,16 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 }
 
 func evalBangOperatorExpression(right object.Object) object.Object {
-	if right == TRUE {
+	switch v := right.(type) {
+	case *object.Boolean:
+		return nativeBoolToBooleanObject(!v.Value)
+	case *object.Integer:
+		return nativeBoolToBooleanObject(v.Value == 0)
+	case *object.Null:
+		return TRUE
+	default:
 		return FALSE
 	}
-
-	if right == FALSE {
-		return TRUE
-	}
-
-	if right == NULL {
-		return TRUE
-	}
-
-	if i, ok := right.(*object.Integer); ok && i.Value == 0 {
-		return TRUE
-	}
-
-	return FALSE
 }
 
 func evalMinusPrefixExpression(right object.Object) object.Object {

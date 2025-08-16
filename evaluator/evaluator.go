@@ -147,14 +147,14 @@ func evalIfExpression(ie *ast.IfExpression) object.Object {
 }
 
 func isTruthy(obj object.Object) bool {
-	switch obj {
-	case NULL:
+	switch v := obj.(type) {
+	case *object.Null:
 		return false
-	case TRUE:
-		return true
-	case FALSE:
-		return false
+	case *object.Boolean:
+		return v.Value
+	case *object.Integer:
+		return v.Value != 0
 	default:
-		return true
+		return false
 	}
 }

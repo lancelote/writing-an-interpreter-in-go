@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"github.com/lancelote/writing-an-interpreter-in-go/ast"
 	"github.com/lancelote/writing-an-interpreter-in-go/object"
 )
@@ -179,4 +180,8 @@ func isTruthy(obj object.Object) bool {
 	default:
 		return false
 	}
+}
+
+func newError(format string, a ...any) *object.Error {
+	return &object.Error{Message: fmt.Sprintf(format, a...)}
 }

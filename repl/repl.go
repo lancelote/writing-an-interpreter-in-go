@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/lancelote/writing-an-interpreter-in-go/evaluator"
 	"github.com/lancelote/writing-an-interpreter-in-go/lexer"
+	"github.com/lancelote/writing-an-interpreter-in-go/object"
 	"github.com/lancelote/writing-an-interpreter-in-go/parser"
 	"io"
 )

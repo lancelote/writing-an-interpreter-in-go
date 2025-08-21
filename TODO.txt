@@ -1,5 +1,5 @@
 - add support for postfix operators
-- establish basic CI with `go fmt` and `go test`
+x establish basic CI with `go fmt` and `go test`
 - add support for Unicode
 - add support for floats
 - add support for hex and octal

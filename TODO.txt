@@ -5,3 +5,4 @@
 - add support for hex and octal
 - abstract reading two-chars tokens
 - add error when reading string from input is interrupted by EOF
+- add support for character escaping

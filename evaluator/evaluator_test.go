@@ -187,6 +187,10 @@ if (10 > 1) {
 			"foobar",
 			"identifier not found: foobar",
 		},
+		{
+			`"Hello" - "World"`,
+			"unknown operator: STRING - STRING",
+		},
 	}
 
 	for _, tt := range tests {
@@ -284,6 +288,20 @@ func TestStringLiteral(t *testing.T) {
 
 	if str.Value != "Hello World!" {
 		t.Fatalf("want %q string literal, got %q", "Hello World!", str.Value)
+	}
+}
+
+func TestStringConcatenation(t *testing.T) {
+	input := `"Hello" + " " + "World!"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("want string object, got %T", evaluated)
+	}
+
+	if str.Value != "Hello World!" {
+		t.Errorf("want %q string literal, got %q", "Hello World!", str.Value)
 	}
 }
 

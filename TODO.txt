@@ -6,3 +6,5 @@ x establish basic CI with `go fmt` and `go test`
 - abstract reading two-chars tokens
 - add error when reading string from input is interrupted by EOF
 - add support for character escaping
+- add graceful exit from REPL
+- add history to REPL

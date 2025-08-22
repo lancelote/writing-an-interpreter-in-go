@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"github.com/lancelote/writing-an-interpreter-in-go/object"
+	"os"
 )
 
 var builtins = map[string]*object.Builtin{
@@ -19,6 +20,16 @@ var builtins = map[string]*object.Builtin{
 			default:
 				return newError("argument to `len` not supported, got %s", args[0].Type())
 			}
+		},
+	},
+	"exit": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 0 {
+				return newError("`exit()` doesn't accept arguments")
+			}
+
+			os.Exit(0)
+			return nil
 		},
 	},
 }

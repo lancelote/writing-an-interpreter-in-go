@@ -6,6 +6,7 @@
 - add error when reading string from input is interrupted by EOF
 - add support for character escaping
 - add history to REPL
+- add support for string indexing
 
 x establish basic CI with `go fmt` and `go test`
 x add graceful exit from REPL

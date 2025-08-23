@@ -601,7 +601,7 @@ func TestParsingEmptyArrayLiteral(t *testing.T) {
 
 	checkParseErrors(t, p)
 
-	assertStatementCount(t, program.Statements, 0)
+	assertStatementCount(t, program.Statements, 1)
 
 	stmt := assertExpressionStatement(t, program.Statements[0])
 

@@ -319,7 +319,7 @@ func (ce *CallExpression) String() string {
 
 type IndexExpression struct {
 	Token token.Token // `[` token
-	Left Expression
+	Left  Expression
 	Index Expression
 }
 

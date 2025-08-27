@@ -325,6 +325,12 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`last("")`, "argument to `last` should be ARRAY, got STRING"},
 		{`last([1, 2], [3, 4])`, "`last` accepts 1 argument, got 2"},
 		{`last([])`, nil},
+		{`rest([1, 2])`, []int{2}},
+		{`rest([1, 2, 3])`, []int{2, 3}},
+		{`rest("")`, "argument to `rest` should be ARRAY, got STRING"},
+		{`rest([1, 2], [3, 4])`, "`rest` accepts 1 argument, got 2"},
+		{`rest([])`, nil},
+		{`rest([1])`, []int{}},
 	}
 
 	for _, tt := range tests {
@@ -471,5 +477,26 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 		t.Errorf("want null, got %T", obj)
 		return false
 	}
+	return true
+}
+
+func testArrayObject(t *testing.T, obj object.Object, expected []int) bool {
+	arr, ok := obj.(*object.Array)
+	if !ok {
+		t.Errorf("want array, got %T", obj)
+		return false
+	}
+
+	if len(arr.Elements) != len(expected) {
+		t.Errorf("want array length of %d, got %d", len(expected), len(arr.Elements))
+		return false
+	}
+
+	for i := 0; i < len(expected); i++ {
+		if !testIntegerObject(t, arr.Elements[i], int64(expected[i])) {
+			return false
+		}
+	}
+
 	return true
 }

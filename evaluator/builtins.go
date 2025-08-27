@@ -53,4 +53,22 @@ var builtins = map[string]*object.Builtin{
 			}
 		},
 	},
+	"last": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("`last` accepts 1 argument, got %d", len(args))
+			}
+
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("argument to `last` should be ARRAY, got %s", args[0].Type())
+			}
+
+			arr := args[0].(*object.Array)
+			if len(arr.Elements) > 0 {
+				return arr.Elements[len(arr.Elements)-1]
+			}
+
+			return NULL
+		},
+	},
 }

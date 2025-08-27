@@ -6,6 +6,34 @@ import (
 )
 
 var builtins = map[string]*object.Builtin{
+	"exit": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 0 {
+				return newError("`exit()` doesn't accept arguments")
+			}
+
+			os.Exit(0)
+			return nil
+		},
+	},
+	"first": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("`first` accepts 1 argument, got %d", len(args))
+			}
+
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("argument to `first` should be ARRAY, got %s", args[0].Type())
+			}
+
+			arr := args[0].(*object.Array)
+			if len(arr.Elements) > 0 {
+				return arr.Elements[0]
+			}
+
+			return NULL
+		},
+	},
 	"len": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
@@ -23,16 +51,6 @@ var builtins = map[string]*object.Builtin{
 			default:
 				return newError("argument to `len` not supported, got %s", args[0].Type())
 			}
-		},
-	},
-	"exit": {
-		Fn: func(args ...object.Object) object.Object {
-			if len(args) != 0 {
-				return newError("`exit()` doesn't accept arguments")
-			}
-
-			os.Exit(0)
-			return nil
 		},
 	},
 }

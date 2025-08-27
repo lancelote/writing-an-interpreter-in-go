@@ -336,6 +336,26 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`push([1, 2], 3)`, []int{1, 2, 3}},
 		{`push([], 1)`, []int{1}},
 		{`push(1, 2)`, "first argument to `push` should be ARRAY, got INTEGER"},
+		{
+			`
+let map = fn(arr, f) {
+	let iter = fn(arr, accumulated) {
+		if (len(arr) == 0) {
+			accumulated
+		} else {
+			iter(rest(arr), push(accumulated, f(first(arr))));
+		}
+	};
+
+	iter(arr, []);
+};
+
+let a = [1, 2, 3, 4];
+let double = fn(x) { x * 2 };
+map(a, double);
+			`,
+			[]int{2, 4, 6, 8},
+		},
 	}
 
 	for _, tt := range tests {
@@ -357,6 +377,9 @@ func TestBuiltinFunctions(t *testing.T) {
 			}
 		case nil:
 			testNullObject(t, evaluated)
+
+		case []int:
+			testArrayObject(t, evaluated, expected)
 
 		}
 	}

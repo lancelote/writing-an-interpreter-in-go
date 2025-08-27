@@ -356,6 +356,28 @@ map(a, double);
 			`,
 			[]int{2, 4, 6, 8},
 		},
+		{
+			`
+let reduce = fn(arr, initial, f) {
+	let iter = fn(arr, result) {
+		if (len(arr) == 0) {
+			result
+		} else {
+			iter(rest(arr), f(result, first(arr)));
+		}
+	};
+
+	iter(arr, initial);
+};
+
+let sum = fn(arr) {
+	reduce(arr, 0, fn(initial, el) { initial + el });
+};
+
+sum([1, 2, 3, 4, 5]);
+			`,
+			15,
+		},
 	}
 
 	for _, tt := range tests {

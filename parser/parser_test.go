@@ -690,6 +690,29 @@ func TestParsingHashLiteralsStringKeys(t *testing.T) {
 	}
 }
 
+func TestParsingEmptyHashLiteral(t *testing.T) {
+	input := `{}`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+
+	checkParseErrors(t, p)
+
+	assertStatementCount(t, program.Statements, 1)
+
+	stmt := assertExpressionStatement(t, program.Statements[0])
+
+	hash, ok := stmt.Expression.(*ast.HashLiteral)
+	if !ok {
+		t.Errorf("want hash literal, got %T", stmt.Expression)
+	}
+
+	if len(hash.Pairs) != 0 {
+		t.Errorf("want 0 pairs, got %d", len(hash.Pairs))
+	}
+}
+
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected any) bool {
 	switch v := expected.(type) {
 	case int:

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/lancelote/writing-an-interpreter-in-go/ast"
+	"hash/fnv"
 	"strings"
 )
 
@@ -26,6 +27,11 @@ type Object interface {
 	Inspect() string
 }
 
+type HashKey struct {
+	Type  ObjectType
+	Value uint64
+}
+
 type Integer struct {
 	Value int64
 }
@@ -36,6 +42,10 @@ func (i *Integer) Type() ObjectType {
 
 func (i *Integer) Inspect() string {
 	return fmt.Sprintf("%d", i.Value)
+}
+
+func (i *Integer) HashKey() HashKey {
+	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
 }
 
 type String struct {
@@ -50,6 +60,13 @@ func (s *String) Inspect() string {
 	return s.Value
 }
 
+func (s *String) HashKey() HashKey {
+	h := fnv.New64a()
+	h.Write([]byte(s.Value))
+
+	return HashKey{Type: s.Type(), Value: h.Sum64()}
+}
+
 type Boolean struct {
 	Value bool
 }
@@ -60,6 +77,18 @@ func (b *Boolean) Type() ObjectType {
 
 func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
+}
+
+func (b *Boolean) HashKey() HashKey {
+	var value uint64
+
+	if b.Value {
+		value = 1
+	} else {
+		value = 0
+	}
+
+	return HashKey{Type: b.Type(), Value: value}
 }
 
 type Null struct{}

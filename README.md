@@ -8,7 +8,8 @@ My notes while reading "[Writing An Interpreter In Go][book]" book by Thorsten B
 - [x] Chapter 1: Lexing
 - [x] Chapter 2: Parsing
 - [x] Chapter 3: Evaluation
-- [ ] Chapter 4: Extending the Interpreter
-- [ ] Going Further
+- [x] Chapter 4: Extending the Interpreter
+- [x] Going Further
+- [ ] The Lost Chapter: A Macro System For Monkey
 
 [book]: https://interpreterbook.com/

@@ -1,7 +1,7 @@
 package evaluator
 
 import (
-	"github.com/lancelote/writing-an-interpreter-in-go"
+	"github.com/lancelote/writing-an-interpreter-in-go/object"
 	"testing"
 )
 
@@ -13,6 +13,14 @@ func TestQuote(t *testing.T) {
 		{
 			`quote(5)`,
 			`5`,
+		},
+		{
+			`quote(5 + 8)`,
+			`(5 + 8)`,
+		},
+		{
+			`quote(foobar + barfoo)`,
+			`(foobar + barfoo)`,
 		},
 	}
 

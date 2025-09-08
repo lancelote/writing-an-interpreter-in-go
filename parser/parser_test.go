@@ -763,6 +763,38 @@ func TestParsingHashLiteralsWitExpressions(t *testing.T) {
 	}
 }
 
+func TestMacroLiteralParsing(t *testing.T) {
+	input := `macro(x, y) { x + y; }`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+
+	checkParseErrors(t, p)
+
+	assertStatementCount(t, program.Statements, 1)
+
+	stmt := assertExpressionStatement(t, program.Statements[0])
+
+	macro, ok := stmt.Expression.(*ast.MacroLiteral)
+	if !ok {
+		t.Fatalf("want macro literal, got %T", stmt)
+	}
+
+	if len(macro.Parameters) != 2 {
+		t.Fatalf("want 2 macro paramters, got %d", len(macro.Parameters))
+	}
+
+	testLiteralExpression(t, macro.Parameters[0], "x")
+	testLiteralExpression(t, macro.Parameters[1], "y")
+
+	assertStatementCount(t, macro.Body.Statements, 1)
+
+	bodyStmt := assertExpressionStatement(t, macro.Body.Statements[0])
+
+	testInfixExpression(t, bodyStmt.Expression, "x", "+", "y")
+}
+
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected any) bool {
 	switch v := expected.(type) {
 	case int:

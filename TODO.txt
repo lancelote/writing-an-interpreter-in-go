@@ -9,6 +9,7 @@
 - add support for string indexing
 - add support for negative indexes
 - cache `HashKey()` return value
+- allow nested macro definitions
 
 x establish basic CI with `go fmt` and `go test`
 x add graceful exit from REPL

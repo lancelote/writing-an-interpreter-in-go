@@ -10,6 +10,6 @@ My notes while reading "[Writing An Interpreter In Go][book]" book by Thorsten B
 - [x] Chapter 3: Evaluation
 - [x] Chapter 4: Extending the Interpreter
 - [x] Going Further
-- [ ] The Lost Chapter: A Macro System For Monkey
+- [x] The Lost Chapter: A Macro System For Monkey
 
 [book]: https://interpreterbook.com/
